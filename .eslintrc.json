@@ -75,6 +75,10 @@
             "error",
             "tab"
         ],
+        "react/jsx-indent-props": [
+            "error",
+            "tab"
+        ],
         "@typescript-eslint/member-delimiter-style": [
             "error",
             {
@@ -97,6 +101,24 @@
         "no-multi-spaces": "error",
         "no-trailing-spaces": "error",
         "@typescript-eslint/no-empty-interface": "warn",
-        "react/self-closing-comp": "warn"
+        "react/self-closing-comp": "warn",
+        "array-bracket-newline": [
+            "error",
+            "always"
+        ],
+        "object-curly-newline": [
+            "error",
+            {
+                "ObjectExpression": "always",
+                "ObjectPattern": {
+                    "multiline": true
+                },
+                "ImportDeclaration": "never",
+                "ExportDeclaration": {
+                    "multiline": true,
+                    "minProperties": 3
+                }
+            }
+        ]
     }
 }
