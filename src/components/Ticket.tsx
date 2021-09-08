@@ -79,6 +79,10 @@ const styles: {[component: string]: CSSProperties} = {
 		width: BOTTOM_SECTION_HEIGHT,
 		borderRadius: BOTTOM_SECTION_HEIGHT / 2,
 	},
+	assigneesContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+	},
 	assigneeCircle: {
 		color: 'white', // TODO: workout the best text color
 		height: ASSIGNEE_SIZE,
@@ -107,7 +111,7 @@ export default class Ticket extends React.Component<Props, State> {
 		];
 		const title = 'Fix the bug where the audio playback suddently stops';
 		const urgency = 0.4; // between 0 and 1
-		const assignee: Assignee = { initials: 'RK', color: '#345' };
+		const assignees: Assignee[] = [{ initials: 'RK', color: '#345' }, { initials: 'RK', color: '#f58' }];
 
 		const { showsCategoryNames } = this.state;
 
@@ -131,7 +135,7 @@ export default class Ticket extends React.Component<Props, State> {
 									style={{
 										...styles.category,
 										backgroundColor: category.color,
-										width: showsCategoryNames ? undefined : CATEGORY_HEIGHT,
+										width: showsCategoryNames ? undefined : CATEGORY_HEIGHT + 20,
 										paddingLeft: showsCategoryNames ? CATEGORY_HEIGHT / 2 : undefined,
 										paddingRight: showsCategoryNames ? CATEGORY_HEIGHT / 2 : undefined,
 									}}
@@ -150,16 +154,20 @@ export default class Ticket extends React.Component<Props, State> {
 					</div>
 
 					<div className="ticket-bottom-section" style={styles.bottomSection}>
-						<div>6 likes</div>
-						<div>6 comments</div>
+						<div>6 l</div>
+						<div>6 c</div>
 						<div className="ticket-urgency" style={{ ...styles.urgency, backgroundColor: urgencyColor }} />
-						<div
-							className="ticket-assignee"
-							style={{ ...styles.assigneeCircle, backgroundColor: assignee.color }}
-						>
-							<div className="ticket-assignee-initial" style={styles.assigneeName}>
-								{assignee.initials}
-							</div>
+						<div className="ticket-assignees-container" style={styles.assigneesContainer}>
+							{assignees.map((assignee) => (
+								<div
+									className="ticket-assignee"
+									style={{ ...styles.assigneeCircle, backgroundColor: assignee.color }}
+								>
+									<div className="ticket-assignee-initial" style={styles.assigneeName}>
+										{assignee.initials}
+									</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
