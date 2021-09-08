@@ -1,7 +1,7 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties } from 'react';
 import './App.css';
-import Segment, { SegmentData } from './components/Segment';
 import { TicketCardData } from './components/Ticket';
+import Pool from './components/Pool';
 
 const randomTicket = (): TicketCardData => ({
 	id: `TUN-${Math.round(Math.random() * 500)}`,
@@ -34,50 +34,13 @@ const styles: {[component: string]: CSSProperties} = {
 		bottom: PADDING,
 		left: PADDING,
 		right: PADDING,
-		display: 'flex',
-		flexDirection: 'row',
-		gap: 10,
-		overflow: 'hidden',
 	},
-	segment: { width: 300 },
 };
 
 function App(): JSX.Element {
-	const [draggedCard, setDraggedCard] = useState<TicketCardData>();
-	const [segmentIndexDragFrom, setSegmentIndexDragFrom] = useState<number>();
-	const [segmentIndexDragOver, setSegmentIndexDragOver] = useState<number>();
-	const [spacingIndex, setSpacingIndex] = useState<number>();
-
 	return (
 		<div className="App" style={styles.app}>
-			<div
-				className="segments-container"
-				style={styles.segmentsContainer}
-			>
-				{segments.map((segment, segmentIndex) => (
-					<Segment
-						style={styles.segment}
-						data={segment}
-						onCardDragStart={(e, ticketData) => {
-							setDraggedCard(ticketData);
-							setSegmentIndexDragFrom(segmentIndex);
-						}}
-						onDragOver={(e) => {
-							// TODO: Set other segments' spacing index to undefined
-						}}
-						onDrop={(e, dropIndex) => {
-							// TODO: for the current update index thing, just insert the card
-							setSegmentIndexDragOver(undefined);
-							setSpacingIndex(undefined);
-						}}
-						spacingIndex={segmentIndex === segmentIndexDragOver ? spacingIndex : undefined}
-						setSpacingIndex={(index) => {
-							setSegmentIndexDragOver(segmentIndex);
-							setSpacingIndex(index);
-						}}
-					/>
-				))}
-			</div>
+			<Pool style={styles.segmentsContainer} initialSegments={segments} />
 		</div>
 	);
 }

@@ -37,7 +37,7 @@ const styles: {[compoennt: string]: CSSProperties} = {
 		overflow: 'hidden',
 	},
 	title: {
-		height: TITLE_HEIGHT,
+		flex: `0 0 ${TITLE_HEIGHT}px`,
 		zIndex: 2,
 		backgroundColor: 'white',
 		display: 'flex',
@@ -46,6 +46,7 @@ const styles: {[compoennt: string]: CSSProperties} = {
 		fontSize: TITLE_FONT_SIZE,
 	},
 	ticketsSection: {
+		flex: '1 1 auto',
 		zIndex: 1,
 		display: 'flex',
 		flexDirection: 'column',
@@ -96,7 +97,7 @@ export default class Segment extends React.Component<Props, State> {
 			const ticketRef = React.createRef<HTMLDivElement>();
 			ticketRefs.push(ticketRef);
 			return (
-				<div ref={ticketRef} key={ticket.id}>
+				<div ref={ticketRef} key={ticket.id} className="ticket-wrapper">
 					<Ticket
 						key={ticket.id}
 						data={ticket}
@@ -119,6 +120,7 @@ export default class Segment extends React.Component<Props, State> {
 				onDragOver={(e) => {
 					this.onDragOver(e, ticketRefs);
 					onDragOver(e);
+					e.preventDefault(); // This allows the firing of onDrop
 				}}
 				onDrop={(e) => {
 					const dropIndex = getClosestIndex(e, ticketRefs);
