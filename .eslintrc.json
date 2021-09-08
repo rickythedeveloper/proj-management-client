@@ -51,7 +51,7 @@
         "max-len": [
             "warn",
             {
-                "code": 120
+                "code": 140
             }
         ],
         "react-hooks/rules-of-hooks": "error",
@@ -72,6 +72,10 @@
             "tab"
         ],
         "react/jsx-indent": [
+            "error",
+            "tab"
+        ],
+        "react/jsx-indent-props": [
             "error",
             "tab"
         ],
@@ -97,6 +101,20 @@
         "no-multi-spaces": "error",
         "no-trailing-spaces": "error",
         "@typescript-eslint/no-empty-interface": "warn",
-        "react/self-closing-comp": "warn"
+        "react/self-closing-comp": "warn",
+        "array-bracket-newline": [
+            "error",
+            {
+                "multiline": true,
+                "minItems": 4
+            }
+        ],
+        "object-curly-newline": [
+            "error",
+            {
+                "multiline": true,
+                "minProperties": 4
+            }
+        ]
     }
 }
