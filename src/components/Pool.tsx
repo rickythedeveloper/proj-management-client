@@ -53,7 +53,7 @@ export default class Pool extends React.Component<Props, State> {
 							// TODO: Set other segments' spacing index to undefined
 						}}
 						onDrop={(e, dropIndex) => {
-							if (segmentIndexDragFrom !== undefined && draggedCard !== undefined && dropIndex !== undefined) {
+							if (segmentIndexDragFrom !== undefined && draggedCard !== undefined) {
 								const segmentDragFrom = segments[segmentIndexDragFrom];
 
 								// Remove the original ticket from the source segment

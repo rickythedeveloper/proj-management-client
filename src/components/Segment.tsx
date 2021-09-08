@@ -11,7 +11,7 @@ interface Props {
 	data: SegmentData;
 	onCardDragStart: (e: DragEvent<HTMLDivElement>, ticketData: TicketCardData) => void;
 	onDragOver: (e: DragEvent<HTMLDivElement>) => void;
-	onDrop: (e: DragEvent<HTMLDivElement>, dropIndex: number | undefined) => void;
+	onDrop: (e: DragEvent<HTMLDivElement>, dropIndex: number) => void;
 	spacingIndex: number | undefined;
 	setSpacingIndex: (index: number | undefined) => void;
 	style?: CSSProperties;
@@ -135,7 +135,7 @@ export default class Segment extends React.Component<Props, State> {
 				}}
 				onDrop={(e) => {
 					const dropIndex = getClosestIndex(e, ticketRefs);
-					onDrop(e, dropIndex);
+					onDrop(e, dropIndex || 0);
 				}}
 			>
 				<div className="segment-title" style={styles.title}>
