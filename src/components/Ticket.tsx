@@ -1,6 +1,15 @@
 import React, { CSSProperties } from 'react';
 
+interface TicketCard {
+	id: string;
+	categories: Category[];
+	title: string;
+	urgency: number; // between 0 and 1
+	assignees: Assignee[];
+}
+
 interface Props {
+	data: TicketCard;
 	style?: CSSProperties;
 }
 interface State {
@@ -102,20 +111,9 @@ export default class Ticket extends React.Component<Props, State> {
 	}
 
 	render(): JSX.Element {
-		const { style: additionalStyle } = this.props;
-		const id = 'TUN-75';
-		const categories: Category[] = [
-			{ name: 'feature', color: '#f00' },
-			{ name: 'b', color: '#0f0' },
-			{ name: 'c', color: '#00f' },
-		];
-		const title = 'Fix the bug where the audio playback suddently stops';
-		const urgency = 0.4; // between 0 and 1
-		const assignees: Assignee[] = [{ initials: 'RK', color: '#345' }, { initials: 'RK', color: '#f58' }];
-
+		const { style: additionalStyle, data } = this.props;
 		const { showsCategoryNames } = this.state;
-
-		const urgencyColor = `rgb(${255 * 2 * urgency}, ${255 * 2 * (1 - urgency)}, 0)`;
+		const urgencyColor = `rgb(${255 * 2 * data.urgency}, ${255 * 2 * (1 - data.urgency)}, 0)`;
 
 		return (
 			<div
@@ -124,11 +122,11 @@ export default class Ticket extends React.Component<Props, State> {
 			>
 				<div className="ticket-content" style={styles.content}>
 					<div className="ticket-top-section" style={styles.topSection}>
-						<div className="ticket-id" style={styles.id}>{id}</div>
+						<div className="ticket-id" style={styles.id}>{data.id}</div>
 						<div className="ticket-categories" style={styles.categoriesContainer}>
 							{/* eslint-disable jsx-a11y/click-events-have-key-events */}
 							{/* eslint-disable jsx-a11y/no-static-element-interactions */}
-							{categories.map((category) => (
+							{data.categories.map((category) => (
 								<div
 									key={category.name}
 									className="ticket-category"
@@ -150,7 +148,7 @@ export default class Ticket extends React.Component<Props, State> {
 					</div>
 
 					<div className="ticket-title" style={styles.title}>
-						{title}
+						{data.title}
 					</div>
 
 					<div className="ticket-bottom-section" style={styles.bottomSection}>
@@ -158,7 +156,7 @@ export default class Ticket extends React.Component<Props, State> {
 						<div>6 c</div>
 						<div className="ticket-urgency" style={{ ...styles.urgency, backgroundColor: urgencyColor }} />
 						<div className="ticket-assignees-container" style={styles.assigneesContainer}>
-							{assignees.map((assignee) => (
+							{data.assignees.map((assignee) => (
 								<div
 									className="ticket-assignee"
 									style={{ ...styles.assigneeCircle, backgroundColor: assignee.color }}
