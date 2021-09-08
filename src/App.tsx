@@ -1,10 +1,10 @@
 import React, { CSSProperties } from 'react';
 import './App.css';
-import Segment from './components/Segment';
-import Ticket, { TicketCardData } from './components/Ticket';
+import { TicketCardData } from './components/Ticket';
+import Pool from './components/Pool';
 
-const ticket1 = {
-	id: 'TUN-75',
+const randomTicket = (): TicketCardData => ({
+	id: `TUN-${Math.round(Math.random() * 500)}`,
 	categories: [
 		{ name: 'feature', color: '#f00' },
 		{ name: 'b', color: '#0f0' },
@@ -13,9 +13,17 @@ const ticket1 = {
 	title: 'Fix the bug where the audio playback suddently stops',
 	urgency: 0.4,
 	assignees: [{ initials: 'RK', color: '#345' }, { initials: 'RK', color: '#f58' }],
-};
+});
 
-const tickets = Array<TicketCardData>(10).fill(ticket1);
+const tickets: TicketCardData[] = [];
+const tickets2: TicketCardData[] = [];
+for (let i = 0; i < 10; i++) {
+	tickets.push(randomTicket());
+	tickets2.push(randomTicket());
+}
+const segment1 = { name: 'In Progress', tickets };
+const segment2 = { name: 'Done', tickets: tickets2 };
+const segments = [segment1, segment2];
 
 const PADDING = 10;
 const styles: {[component: string]: CSSProperties} = {
@@ -26,34 +34,13 @@ const styles: {[component: string]: CSSProperties} = {
 		bottom: PADDING,
 		left: PADDING,
 		right: PADDING,
-		display: 'flex',
-		flexDirection: 'row',
-		gap: 10,
-		overflow: 'hidden',
 	},
-	segment: { width: 300 },
 };
 
 function App(): JSX.Element {
 	return (
 		<div className="App" style={styles.app}>
-			<div
-				className="segments-container"
-				style={styles.segmentsContainer}
-			>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
-				/>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
-				/>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
-				/>
-			</div>
+			<Pool style={styles.segmentsContainer} initialSegments={segments} />
 		</div>
 	);
 }

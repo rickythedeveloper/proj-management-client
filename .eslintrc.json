@@ -109,12 +109,8 @@
                 "minItems": 4
             }
         ],
-        "object-curly-newline": [
-            "error",
-            {
-                "multiline": true,
-                "minProperties": 4
-            }
-        ]
+        "object-curly-newline": "off",
+        "no-plusplus": "off",
+        "no-continue": "off"
     }
 }
