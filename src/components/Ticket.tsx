@@ -4,8 +4,7 @@ interface Props {
 	style?: CSSProperties;
 }
 interface State {}
-const DEFAULT_STATE = {
-};
+const DEFAULT_STATE = {};
 
 interface Category {
 	name: string;
@@ -24,6 +23,70 @@ const GAP = 15;
 const TITLE_FONT_SIZE = 20;
 const ASSIGNEE_SIZE = BOTTOM_SECTION_HEIGHT * 1;
 
+const styles: {[component: string]: CSSProperties} = {
+	container: {
+		backgroundColor: '#fff',
+		borderRadius: 10,
+		border: '1px solid #000',
+		padding: GAP,
+		width: 250,
+	},
+	content: {
+		position: 'relative',
+		display: 'flex',
+		flexDirection: 'column',
+		gap: GAP,
+	},
+	topSection: {
+		height: TOP_SECTION_HEIGHT,
+		width: '100%',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	id: {
+		lineHeight: '100%',
+		fontSize: CATEGORY_HEIGHT * 0.8,
+		color: 'grey',
+	},
+	categoriesContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		gap: GAP,
+	},
+	category: {
+		height: CATEGORY_HEIGHT,
+		width: CATEGORY_HEIGHT,
+		borderRadius: CATEGORY_HEIGHT / 2,
+	},
+	title: {
+		fontSize: TITLE_FONT_SIZE,
+		color: '#333',
+	},
+	bottomSection: {
+		height: BOTTOM_SECTION_HEIGHT,
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	urgency: {
+		height: BOTTOM_SECTION_HEIGHT,
+		width: BOTTOM_SECTION_HEIGHT,
+		borderRadius: BOTTOM_SECTION_HEIGHT / 2,
+	},
+	assigneeCircle: {
+		color: 'white', // TODO: workout the best text color
+		height: ASSIGNEE_SIZE,
+		width: ASSIGNEE_SIZE,
+		borderRadius: ASSIGNEE_SIZE / 2,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	assigneeName: { fontSize: ASSIGNEE_SIZE / 2 },
+};
+
 export default class Ticket extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
@@ -34,114 +97,48 @@ export default class Ticket extends React.Component<Props, State> {
 		const { style: additionalStyle } = this.props;
 		const id = 'TUN-75';
 		const categories: Category[] = [
-			{
-				name: 'a', color: '#f00',
-			}, {
-				name: 'a', color: '#0f0',
-			}, {
-				name: 'a', color: '#00f',
-			},
+			{ name: 'a', color: '#f00' },
+			{ name: 'b', color: '#0f0' },
+			{ name: 'c', color: '#00f' },
 		];
 		const title = 'Fix the bug where the audio playback suddently stops';
 		const urgency = 0.4; // between 0 and 1
-		const assignee: Assignee = {
-			initials: 'RK', color: '#345',
-		};
-		const containerStyle: CSSProperties = {
-			backgroundColor: '#fff',
-			borderRadius: 10,
-			border: '1px solid #000',
-			padding: GAP,
-			width: 250,
-			...additionalStyle,
-		};
-		const contentStyle: CSSProperties = {
-			position: 'relative',
-			display: 'flex',
-			flexDirection: 'column',
-			gap: GAP,
-		};
-		const topSectionStyle: CSSProperties = {
-			height: TOP_SECTION_HEIGHT,
-			width: '100%',
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'space-between',
-		};
-		const idStyle: CSSProperties = {
-			lineHeight: '100%',
-			fontSize: CATEGORY_HEIGHT * 0.8,
-			color: 'grey',
-		};
-		const categoriesStyle: CSSProperties = {
-			display: 'flex',
-			flexDirection: 'row',
-			gap: GAP,
-		};
-		const categoryStyle: CSSProperties = {
-			height: CATEGORY_HEIGHT,
-			width: CATEGORY_HEIGHT,
-			borderRadius: CATEGORY_HEIGHT / 2,
-		};
-		const titleStyle: CSSProperties = {
-			fontSize: TITLE_FONT_SIZE,
-			color: '#333',
-		};
-		const bottomSectionStyle: CSSProperties = {
-			height: BOTTOM_SECTION_HEIGHT,
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-		};
-		const urgencyStyle: CSSProperties = {
-			height: BOTTOM_SECTION_HEIGHT,
-			width: BOTTOM_SECTION_HEIGHT,
-			borderRadius: BOTTOM_SECTION_HEIGHT / 2,
-			backgroundColor: `rgb(${255 * 2 * urgency}, ${255 * 2 * (1 - urgency)}, 0)`,
-		};
-		const assigneeStyle: CSSProperties = {
-			backgroundColor: assignee.color,
-			color: 'white', // TODO: workout the best text color
-			height: ASSIGNEE_SIZE,
-			width: ASSIGNEE_SIZE,
-			borderRadius: ASSIGNEE_SIZE / 2,
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'center',
-		};
-		const assigneeInitialStyle: CSSProperties = {
-			fontSize: ASSIGNEE_SIZE / 2,
-		};
+		const assignee: Assignee = { initials: 'RK', color: '#345' };
 
-		const categoryElements = categories.map((category) => (
-			<div
-				className="ticket-category"
-				style={{
-					...categoryStyle, backgroundColor: category.color,
-				}}
-			/>
-		));
+		const urgencyColor = `rgb(${255 * 2 * urgency}, ${255 * 2 * (1 - urgency)}, 0)`;
+
 		return (
-			<div className="ticket" style={containerStyle}>
-				<div className="ticket-content" style={contentStyle}>
-					<div className="ticket-top-section" style={topSectionStyle}>
-						<div className="ticket-id" style={idStyle}>{id}</div>
-						<div className="ticket-categories" style={categoriesStyle}>
-							{categoryElements}
+			<div
+				className="ticket"
+				style={{ ...styles.container, ...additionalStyle }}
+			>
+				<div className="ticket-content" style={styles.content}>
+					<div className="ticket-top-section" style={styles.topSection}>
+						<div className="ticket-id" style={styles.id}>{id}</div>
+						<div className="ticket-categories" style={styles.categoriesContainer}>
+							{categories.map((category) => (
+								<div
+									key={category.name}
+									className="ticket-category"
+									style={{ ...styles.category, backgroundColor: category.color }}
+								/>
+							))}
 						</div>
 					</div>
 
-					<div className="ticket-title" style={titleStyle}>
+					<div className="ticket-title" style={styles.title}>
 						{title}
 					</div>
 
-					<div className="ticket-bottom-section" style={bottomSectionStyle}>
+					<div className="ticket-bottom-section" style={styles.bottomSection}>
 						<div>6 likes</div>
 						<div>6 comments</div>
-						<div className="ticket-urgency" style={urgencyStyle} />
-						<div className="ticket-assignee" style={assigneeStyle}>
-							<div className="ticket-assignee-initial" style={assigneeInitialStyle}>
+						<div className="ticket-urgency" style={{ ...styles.urgency, backgroundColor: urgencyColor }} />
+						<div
+							className="ticket-assignee"
+							style={{ ...styles.assigneeCircle, backgroundColor: assignee.color }}
+						>
+							<div className="ticket-assignee-initial" style={styles.assigneeName}>
 								{assignee.initials}
 							</div>
 						</div>
