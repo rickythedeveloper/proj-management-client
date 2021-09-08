@@ -116,6 +116,7 @@
                 "minProperties": 4
             }
         ],
-        "no-plusplus": "off"
+        "no-plusplus": "off",
+        "no-continue": "off"
     }
 }

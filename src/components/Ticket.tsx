@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, DragEvent, LegacyRef } from 'react';
 
 export interface TicketCardData {
 	id: string;
@@ -10,6 +10,7 @@ export interface TicketCardData {
 
 interface Props {
 	data: TicketCardData;
+	onDragStart: (e: DragEvent<HTMLDivElement>) => void;
 	style?: CSSProperties;
 }
 interface State {
@@ -111,7 +112,7 @@ export default class Ticket extends React.Component<Props, State> {
 	}
 
 	render(): JSX.Element {
-		const { style: additionalStyle, data } = this.props;
+		const { style: additionalStyle, data, onDragStart } = this.props;
 		const { showsCategoryNames } = this.state;
 		const urgencyColor = `rgb(${255 * 2 * data.urgency}, ${255 * 2 * (1 - data.urgency)}, 0)`;
 
@@ -119,6 +120,8 @@ export default class Ticket extends React.Component<Props, State> {
 			<div
 				className="ticket"
 				style={{ ...styles.container, ...additionalStyle }}
+				draggable
+				onDragStart={onDragStart}
 			>
 				<div className="ticket-content" style={styles.content}>
 					<div className="ticket-top-section" style={styles.topSection}>

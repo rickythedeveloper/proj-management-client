@@ -1,18 +1,22 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, DragEvent } from 'react';
 import Ticket, { TicketCardData } from './Ticket';
 import './Segment.css';
 
 export interface SegmentData {
 	name: string;
 	tickets: TicketCardData[];
-	spacingBeforeIndex?: number;
 }
 
 interface Props {
 	data: SegmentData;
+	onCardDragStart: (e: DragEvent<HTMLDivElement>, ticketData: TicketCardData) => void;
+	onDragOver: (e: DragEvent<HTMLDivElement>) => void;
+	onDrop: (e: DragEvent<HTMLDivElement>) => void;
 	style?: CSSProperties;
 }
-interface State {}
+interface State {
+	spacingBeforeIndex?: number;
+}
 const DEFAULT_STATE: State = {};
 
 const BACKGROUND_COLOR = '#cccc';
@@ -59,22 +63,65 @@ export default class Segment extends React.Component<Props, State> {
 		this.state = DEFAULT_STATE;
 	}
 
-	render(): JSX.Element {
-		const { style: additionalStyle, data } = this.props;
+	onDragOver(e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObject<HTMLDivElement>[]): void {
+		const { spacingBeforeIndex } = this.state;
+		const { clientY } = e;
 
-		const ticketElements = data.tickets.map((ticket, index) => (
-			<Ticket
-				key={ticket.id}
-				data={ticket}
-				style={{
-					marginTop: index === data.spacingBeforeIndex ? 50 : undefined,
-					transition: 'margin-top 0.3s',
-				}}
-			/>
-		));
+		let closestIndex: number | undefined;
+		let closestDistance = Infinity;
+		for (let i = 0; i < ticketRefs.length; i++) {
+			const ticketRef = ticketRefs[i];
+			if (ticketRef.current === null) continue;
+			const { y } = ticketRef.current?.getBoundingClientRect();
+			const distance = Math.abs(clientY - y);
+			if (distance < closestDistance) {
+				closestIndex = i;
+				closestDistance = distance;
+			}
+		}
+
+		if (closestIndex !== spacingBeforeIndex) this.setState({ spacingBeforeIndex: closestIndex });
+	}
+
+	render(): JSX.Element {
+		const {
+			style: additionalStyle, data, onCardDragStart, onDragOver, onDrop,
+		} = this.props;
+		const { spacingBeforeIndex } = this.state;
+
+		const ticketRefs: React.RefObject<HTMLDivElement>[] = [];
+		const ticketElements = data.tickets.map((ticket, index) => {
+			const ticketRef = React.createRef<HTMLDivElement>();
+			ticketRefs.push(ticketRef);
+			return (
+				<div ref={ticketRef} key={ticket.id}>
+					<Ticket
+						key={ticket.id}
+						data={ticket}
+						onDragStart={(e) => {
+							onCardDragStart(e, ticket);
+						}}
+						style={{
+							marginTop: index === spacingBeforeIndex ? 50 : undefined,
+							transition: 'margin-top 0.3s',
+						}}
+					/>
+				</div>
+			);
+		});
 
 		return (
-			<div className="segment" style={{ ...styles.container, ...additionalStyle }}>
+			<div
+				className="segment"
+				style={{ ...styles.container, ...additionalStyle }}
+				onDragOver={(e) => {
+					this.onDragOver(e, ticketRefs);
+					onDragOver(e);
+				}}
+				onDrop={(e) => {
+					onDrop(e);
+				}}
+			>
 				<div className="segment-title" style={styles.title}>
 					{data.name}
 				</div>

@@ -1,7 +1,7 @@
-import React, { CSSProperties, useState, useEffect } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import './App.css';
 import Segment from './components/Segment';
-import Ticket, { TicketCardData } from './components/Ticket';
+import { TicketCardData } from './components/Ticket';
 
 const randomTicket = (): TicketCardData => ({
 	id: `TUN-${Math.round(Math.random() * 500)}`,
@@ -38,14 +38,7 @@ const styles: {[component: string]: CSSProperties} = {
 };
 
 function App(): JSX.Element {
-	const [theIndex, setTheIndex] = useState(5);
-
-	useEffect(() => {
-		setInterval(() => {
-			console.log('helo');
-			setTheIndex((prev) => prev + (Math.random() < 0.5 ? (-1) : 1));
-		}, 1000);
-	}, []);
+	const [draggedCard, setDraggedCard] = useState<TicketCardData>();
 
 	return (
 		<div className="App" style={styles.app}>
@@ -55,15 +48,29 @@ function App(): JSX.Element {
 			>
 				<Segment
 					style={styles.segment}
-					data={{ name: 'In Progress', tickets, spacingBeforeIndex: theIndex }}
+					data={{ name: 'In Progress', tickets }}
+					onCardDragStart={(e, ticketData) => {
+						setDraggedCard(ticketData);
+					}}
+					onDragOver={(e) => {
+						// TODO: Set other segments' spacing index to undefined
+					}}
+					onDrop={(e) => {
+						// TODO: for the current update index thing, just insert the card
+					}}
 				/>
 				<Segment
 					style={styles.segment}
 					data={{ name: 'In Progress', tickets }}
-				/>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
+					onCardDragStart={(e, ticketData) => {
+						setDraggedCard(ticketData);
+					}}
+					onDragOver={(e) => {
+						// TODO: Set other segments' spacing index to undefined
+					}}
+					onDrop={(e) => {
+						// TODO: for the current update index thing, just insert the card
+					}}
 				/>
 			</div>
 		</div>
