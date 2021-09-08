@@ -11,7 +11,7 @@ interface Props {
 	data: SegmentData;
 	onCardDragStart: (e: DragEvent<HTMLDivElement>, ticketData: TicketCardData) => void;
 	onDragOver: (e: DragEvent<HTMLDivElement>) => void;
-	onDrop: (e: DragEvent<HTMLDivElement>) => void;
+	onDrop: (e: DragEvent<HTMLDivElement>, dropIndex: number | undefined) => void;
 	spacingIndex: number | undefined;
 	setSpacingIndex: (index: number | undefined) => void;
 	style?: CSSProperties;
@@ -58,6 +58,23 @@ const styles: {[compoennt: string]: CSSProperties} = {
 	emptySpacing: { height: EMPTY_SPACING_HEIHT, width: 100, backgroundColor: 'red' },
 };
 
+const getClosestIndex = (e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObject<HTMLDivElement>[]): number | undefined => {
+	const { clientY } = e;
+	let closestIndex: number | undefined;
+	let closestDistance = Infinity;
+	for (let i = 0; i < ticketRefs.length; i++) {
+		const ticketRef = ticketRefs[i];
+		if (ticketRef.current === null) continue;
+		const { y } = ticketRef.current?.getBoundingClientRect();
+		const distance = Math.abs(clientY - y);
+		if (distance < closestDistance) {
+			closestIndex = i;
+			closestDistance = distance;
+		}
+	}
+	return closestIndex;
+};
+
 export default class Segment extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
@@ -66,21 +83,7 @@ export default class Segment extends React.Component<Props, State> {
 
 	onDragOver(e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObject<HTMLDivElement>[]): void {
 		const { spacingIndex: spacingBeforeIndex, setSpacingIndex } = this.props;
-		const { clientY } = e;
-
-		let closestIndex: number | undefined;
-		let closestDistance = Infinity;
-		for (let i = 0; i < ticketRefs.length; i++) {
-			const ticketRef = ticketRefs[i];
-			if (ticketRef.current === null) continue;
-			const { y } = ticketRef.current?.getBoundingClientRect();
-			const distance = Math.abs(clientY - y);
-			if (distance < closestDistance) {
-				closestIndex = i;
-				closestDistance = distance;
-			}
-		}
-
+		const closestIndex = getClosestIndex(e, ticketRefs);
 		if (closestIndex !== spacingBeforeIndex) setSpacingIndex(closestIndex);
 	}
 
@@ -118,7 +121,8 @@ export default class Segment extends React.Component<Props, State> {
 					onDragOver(e);
 				}}
 				onDrop={(e) => {
-					onDrop(e);
+					const dropIndex = getClosestIndex(e, ticketRefs);
+					onDrop(e, dropIndex);
 				}}
 			>
 				<div className="segment-title" style={styles.title}>

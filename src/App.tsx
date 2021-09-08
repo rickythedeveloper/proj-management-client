@@ -44,7 +44,8 @@ const styles: {[component: string]: CSSProperties} = {
 
 function App(): JSX.Element {
 	const [draggedCard, setDraggedCard] = useState<TicketCardData>();
-	const [segmentIndexDrag, setSegmentIndexDrag] = useState<number>();
+	const [segmentIndexDragFrom, setSegmentIndexDragFrom] = useState<number>();
+	const [segmentIndexDragOver, setSegmentIndexDragOver] = useState<number>();
 	const [spacingIndex, setSpacingIndex] = useState<number>();
 
 	return (
@@ -59,16 +60,19 @@ function App(): JSX.Element {
 						data={segment}
 						onCardDragStart={(e, ticketData) => {
 							setDraggedCard(ticketData);
+							setSegmentIndexDragFrom(segmentIndex);
 						}}
 						onDragOver={(e) => {
 							// TODO: Set other segments' spacing index to undefined
 						}}
-						onDrop={(e) => {
+						onDrop={(e, dropIndex) => {
 							// TODO: for the current update index thing, just insert the card
+							setSegmentIndexDragOver(undefined);
+							setSpacingIndex(undefined);
 						}}
-						spacingIndex={segmentIndex === segmentIndexDrag ? spacingIndex : undefined}
+						spacingIndex={segmentIndex === segmentIndexDragOver ? spacingIndex : undefined}
 						setSpacingIndex={(index) => {
-							setSegmentIndexDrag(segmentIndex);
+							setSegmentIndexDragOver(segmentIndex);
 							setSpacingIndex(index);
 						}}
 					/>
