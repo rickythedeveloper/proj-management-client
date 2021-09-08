@@ -17,15 +17,17 @@ const ticket1 = {
 
 const tickets = Array<TicketCardData>(10).fill(ticket1);
 
+const PADDING = 10;
 const styles: {[component: string]: CSSProperties} = {
-	app: { width: '100%', height: '100%' },
+	app: { position: 'relative', width: '100%', height: '100%' },
 	segmentsContainer: {
-		height: '100%',
-		width: '100%',
+		position: 'absolute',
+		top: PADDING,
+		bottom: PADDING,
+		left: PADDING,
+		right: PADDING,
 		display: 'flex',
 		flexDirection: 'row',
-		alignItems: 'stretch',
-		justifyContent: 'stretch',
 		gap: 10,
 		overflow: 'hidden',
 	},
