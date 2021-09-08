@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 
-interface TicketCard {
+export interface TicketCardData {
 	id: string;
 	categories: Category[];
 	title: string;
@@ -9,7 +9,7 @@ interface TicketCard {
 }
 
 interface Props {
-	data: TicketCard;
+	data: TicketCardData;
 	style?: CSSProperties;
 }
 interface State {
@@ -158,6 +158,7 @@ export default class Ticket extends React.Component<Props, State> {
 						<div className="ticket-assignees-container" style={styles.assigneesContainer}>
 							{data.assignees.map((assignee) => (
 								<div
+									key={`${assignee.initials}${assignee.color}`}
 									className="ticket-assignee"
 									style={{ ...styles.assigneeCircle, backgroundColor: assignee.color }}
 								>

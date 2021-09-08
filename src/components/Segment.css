@@ -1,0 +1,7 @@
+/* The following two hide the scroll bar while keeping the functionality */
+.segment-tickets::-webkit-scrollbar {
+	display: none;
+}
+.segment-tickets {
+	-ms-overflow-style: none;
+}
