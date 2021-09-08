@@ -5,6 +5,7 @@ import './Segment.css';
 export interface SegmentData {
 	name: string;
 	tickets: TicketCardData[];
+	spacingBeforeIndex?: number;
 }
 
 interface Props {
@@ -12,12 +13,13 @@ interface Props {
 	style?: CSSProperties;
 }
 interface State {}
-const DEFAULT_STATE = {};
+const DEFAULT_STATE: State = {};
 
 const BACKGROUND_COLOR = '#cccc';
 const TITLE_HEIGHT = 50;
 const TITLE_FONT_SIZE = 20;
 const GAP = 10;
+const EMPTY_SPACING_HEIHT = 100;
 
 const styles: {[compoennt: string]: CSSProperties} = {
 	container: {
@@ -45,9 +47,10 @@ const styles: {[compoennt: string]: CSSProperties} = {
 		gap: GAP,
 		overflowY: 'auto',
 		overflowX: 'hidden',
-		// scrollbarWidth: 0,
 		padding: GAP,
+		transition: 'all 1s',
 	},
+	emptySpacing: { height: EMPTY_SPACING_HEIHT, width: 100, backgroundColor: 'red' },
 };
 
 export default class Segment extends React.Component<Props, State> {
@@ -59,15 +62,24 @@ export default class Segment extends React.Component<Props, State> {
 	render(): JSX.Element {
 		const { style: additionalStyle, data } = this.props;
 
+		const ticketElements = data.tickets.map((ticket, index) => (
+			<Ticket
+				key={ticket.id}
+				data={ticket}
+				style={{
+					marginTop: index === data.spacingBeforeIndex ? 50 : undefined,
+					transition: 'margin-top 0.3s',
+				}}
+			/>
+		));
+
 		return (
 			<div className="segment" style={{ ...styles.container, ...additionalStyle }}>
 				<div className="segment-title" style={styles.title}>
 					{data.name}
 				</div>
 				<div className="segment-tickets" style={styles.ticketsSection}>
-					{data.tickets.map((ticket) => (
-						<Ticket key={ticket.id} data={ticket} />
-					))}
+					{ticketElements}
 				</div>
 			</div>
 		);

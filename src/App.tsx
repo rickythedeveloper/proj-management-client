@@ -1,10 +1,10 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useState, useEffect } from 'react';
 import './App.css';
 import Segment from './components/Segment';
 import Ticket, { TicketCardData } from './components/Ticket';
 
-const ticket1 = {
-	id: 'TUN-75',
+const randomTicket = (): TicketCardData => ({
+	id: `TUN-${Math.round(Math.random() * 500)}`,
 	categories: [
 		{ name: 'feature', color: '#f00' },
 		{ name: 'b', color: '#0f0' },
@@ -13,9 +13,12 @@ const ticket1 = {
 	title: 'Fix the bug where the audio playback suddently stops',
 	urgency: 0.4,
 	assignees: [{ initials: 'RK', color: '#345' }, { initials: 'RK', color: '#f58' }],
-};
+});
 
-const tickets = Array<TicketCardData>(10).fill(ticket1);
+const tickets: TicketCardData[] = [];
+for (let i = 0; i < 10; i++) {
+	tickets.push(randomTicket());
+}
 
 const PADDING = 10;
 const styles: {[component: string]: CSSProperties} = {
@@ -35,6 +38,15 @@ const styles: {[component: string]: CSSProperties} = {
 };
 
 function App(): JSX.Element {
+	const [theIndex, setTheIndex] = useState(5);
+
+	useEffect(() => {
+		setInterval(() => {
+			console.log('helo');
+			setTheIndex((prev) => prev + (Math.random() < 0.5 ? (-1) : 1));
+		}, 1000);
+	}, []);
+
 	return (
 		<div className="App" style={styles.app}>
 			<div
@@ -43,7 +55,7 @@ function App(): JSX.Element {
 			>
 				<Segment
 					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
+					data={{ name: 'In Progress', tickets, spacingBeforeIndex: theIndex }}
 				/>
 				<Segment
 					style={styles.segment}

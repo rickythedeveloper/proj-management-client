@@ -115,6 +115,7 @@
                 "multiline": true,
                 "minProperties": 4
             }
-        ]
+        ],
+        "no-plusplus": "off"
     }
 }
