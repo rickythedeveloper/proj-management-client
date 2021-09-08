@@ -66,11 +66,21 @@ const getClosestIndex = (e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObje
 	for (let i = 0; i < ticketRefs.length; i++) {
 		const ticketRef = ticketRefs[i];
 		if (ticketRef.current === null) continue;
-		const { y } = ticketRef.current?.getBoundingClientRect();
+		const { y } = ticketRef.current.getBoundingClientRect();
 		const distance = Math.abs(clientY - y);
 		if (distance < closestDistance) {
 			closestIndex = i;
 			closestDistance = distance;
+		}
+
+		// For the last element, check if the drag is closer to the bottom.
+		if (i === ticketRefs.length - 1) {
+			const { height } = ticketRef.current.getBoundingClientRect();
+			const lastDistance = Math.abs(clientY - (y + height));
+			if (lastDistance < closestDistance) {
+				closestIndex = i + 1;
+				closestDistance = lastDistance;
+			}
 		}
 	}
 	return closestIndex;
@@ -106,6 +116,7 @@ export default class Segment extends React.Component<Props, State> {
 						}}
 						style={{
 							marginTop: index === spacingBeforeIndex ? 50 : undefined,
+							marginBottom: index === data.tickets.length - 1 && spacingBeforeIndex === data.tickets.length ? 50 : undefined,
 							transition: 'margin-top 0.3s',
 						}}
 					/>
