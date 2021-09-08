@@ -1,6 +1,6 @@
 import React, { CSSProperties, useState } from 'react';
 import './App.css';
-import Segment from './components/Segment';
+import Segment, { SegmentData } from './components/Segment';
 import { TicketCardData } from './components/Ticket';
 
 const randomTicket = (): TicketCardData => ({
@@ -16,9 +16,14 @@ const randomTicket = (): TicketCardData => ({
 });
 
 const tickets: TicketCardData[] = [];
+const tickets2: TicketCardData[] = [];
 for (let i = 0; i < 10; i++) {
 	tickets.push(randomTicket());
+	tickets2.push(randomTicket());
 }
+const segment1 = { name: 'In Progress', tickets };
+const segment2 = { name: 'Done', tickets: tickets2 };
+const segments = [segment1, segment2];
 
 const PADDING = 10;
 const styles: {[component: string]: CSSProperties} = {
@@ -39,6 +44,8 @@ const styles: {[component: string]: CSSProperties} = {
 
 function App(): JSX.Element {
 	const [draggedCard, setDraggedCard] = useState<TicketCardData>();
+	const [segmentIndexDrag, setSegmentIndexDrag] = useState<number>();
+	const [spacingIndex, setSpacingIndex] = useState<number>();
 
 	return (
 		<div className="App" style={styles.app}>
@@ -46,32 +53,26 @@ function App(): JSX.Element {
 				className="segments-container"
 				style={styles.segmentsContainer}
 			>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
-					onCardDragStart={(e, ticketData) => {
-						setDraggedCard(ticketData);
-					}}
-					onDragOver={(e) => {
-						// TODO: Set other segments' spacing index to undefined
-					}}
-					onDrop={(e) => {
-						// TODO: for the current update index thing, just insert the card
-					}}
-				/>
-				<Segment
-					style={styles.segment}
-					data={{ name: 'In Progress', tickets }}
-					onCardDragStart={(e, ticketData) => {
-						setDraggedCard(ticketData);
-					}}
-					onDragOver={(e) => {
-						// TODO: Set other segments' spacing index to undefined
-					}}
-					onDrop={(e) => {
-						// TODO: for the current update index thing, just insert the card
-					}}
-				/>
+				{segments.map((segment, segmentIndex) => (
+					<Segment
+						style={styles.segment}
+						data={segment}
+						onCardDragStart={(e, ticketData) => {
+							setDraggedCard(ticketData);
+						}}
+						onDragOver={(e) => {
+							// TODO: Set other segments' spacing index to undefined
+						}}
+						onDrop={(e) => {
+							// TODO: for the current update index thing, just insert the card
+						}}
+						spacingIndex={segmentIndex === segmentIndexDrag ? spacingIndex : undefined}
+						setSpacingIndex={(index) => {
+							setSegmentIndexDrag(segmentIndex);
+							setSpacingIndex(index);
+						}}
+					/>
+				))}
 			</div>
 		</div>
 	);

@@ -12,10 +12,11 @@ interface Props {
 	onCardDragStart: (e: DragEvent<HTMLDivElement>, ticketData: TicketCardData) => void;
 	onDragOver: (e: DragEvent<HTMLDivElement>) => void;
 	onDrop: (e: DragEvent<HTMLDivElement>) => void;
+	spacingIndex: number | undefined;
+	setSpacingIndex: (index: number | undefined) => void;
 	style?: CSSProperties;
 }
 interface State {
-	spacingBeforeIndex?: number;
 }
 const DEFAULT_STATE: State = {};
 
@@ -64,7 +65,7 @@ export default class Segment extends React.Component<Props, State> {
 	}
 
 	onDragOver(e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObject<HTMLDivElement>[]): void {
-		const { spacingBeforeIndex } = this.state;
+		const { spacingIndex: spacingBeforeIndex, setSpacingIndex } = this.props;
 		const { clientY } = e;
 
 		let closestIndex: number | undefined;
@@ -80,14 +81,12 @@ export default class Segment extends React.Component<Props, State> {
 			}
 		}
 
-		if (closestIndex !== spacingBeforeIndex) this.setState({ spacingBeforeIndex: closestIndex });
+		if (closestIndex !== spacingBeforeIndex) setSpacingIndex(closestIndex);
 	}
 
 	render(): JSX.Element {
-		const {
-			style: additionalStyle, data, onCardDragStart, onDragOver, onDrop,
-		} = this.props;
-		const { spacingBeforeIndex } = this.state;
+		const { style: additionalStyle, data, onCardDragStart, onDragOver, onDrop } = this.props;
+		const { spacingIndex: spacingBeforeIndex } = this.props;
 
 		const ticketRefs: React.RefObject<HTMLDivElement>[] = [];
 		const ticketElements = data.tickets.map((ticket, index) => {
