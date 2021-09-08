@@ -10,15 +10,11 @@ export interface SegmentData {
 interface Props {
 	data: SegmentData;
 	onCardDragStart: (e: DragEvent<HTMLDivElement>, ticketData: TicketCardData) => void;
-	onDragOver: (e: DragEvent<HTMLDivElement>) => void;
 	onDrop: (e: DragEvent<HTMLDivElement>, dropIndex: number) => void;
 	spacingIndex: number | undefined;
 	setSpacingIndex: (index: number | undefined) => void;
 	style?: CSSProperties;
 }
-interface State {
-}
-const DEFAULT_STATE: State = {};
 
 const BACKGROUND_COLOR = '#cccc';
 const TITLE_HEIGHT = 50;
@@ -86,12 +82,7 @@ const getClosestIndex = (e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObje
 	return closestIndex;
 };
 
-export default class Segment extends React.Component<Props, State> {
-	constructor(props: Props) {
-		super(props);
-		this.state = DEFAULT_STATE;
-	}
-
+export default class Segment extends React.Component<Props> {
 	onDragOver(e: DragEvent<HTMLDivElement>, ticketRefs: React.RefObject<HTMLDivElement>[]): void {
 		const { spacingIndex: spacingBeforeIndex, setSpacingIndex } = this.props;
 		const closestIndex = getClosestIndex(e, ticketRefs);
@@ -99,7 +90,7 @@ export default class Segment extends React.Component<Props, State> {
 	}
 
 	render(): JSX.Element {
-		const { style: additionalStyle, data, onCardDragStart, onDragOver, onDrop } = this.props;
+		const { style: additionalStyle, data, onCardDragStart, onDrop } = this.props;
 		const { spacingIndex: spacingBeforeIndex } = this.props;
 
 		const ticketRefs: React.RefObject<HTMLDivElement>[] = [];
@@ -130,7 +121,6 @@ export default class Segment extends React.Component<Props, State> {
 				style={{ ...styles.container, ...additionalStyle }}
 				onDragOver={(e) => {
 					this.onDragOver(e, ticketRefs);
-					onDragOver(e);
 					e.preventDefault(); // This allows the firing of onDrop
 				}}
 				onDrop={(e) => {

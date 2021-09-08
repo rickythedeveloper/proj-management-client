@@ -1,4 +1,4 @@
-import React, { CSSProperties, DragEvent, LegacyRef } from 'react';
+import React, { CSSProperties, DragEvent } from 'react';
 
 export interface TicketCardData {
 	id: string;

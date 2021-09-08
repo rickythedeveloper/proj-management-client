@@ -49,9 +49,6 @@ export default class Pool extends React.Component<Props, State> {
 								segmentIndexDragFrom: segmentIndex,
 							});
 						}}
-						onDragOver={(e) => {
-							// TODO: Set other segments' spacing index to undefined
-						}}
 						onDrop={(e, dropIndex) => {
 							if (segmentIndexDragFrom !== undefined && draggedCard !== undefined) {
 								const segmentDragFrom = segments[segmentIndexDragFrom];
