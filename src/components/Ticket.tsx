@@ -3,8 +3,10 @@ import React, { CSSProperties } from 'react';
 interface Props {
 	style?: CSSProperties;
 }
-interface State {}
-const DEFAULT_STATE = {};
+interface State {
+	showsCategoryNames: boolean;
+}
+const DEFAULT_STATE: State = { showsCategoryNames: false };
 
 interface Category {
 	name: string;
@@ -25,11 +27,10 @@ const ASSIGNEE_SIZE = BOTTOM_SECTION_HEIGHT * 1;
 
 const styles: {[component: string]: CSSProperties} = {
 	container: {
-		backgroundColor: '#fff',
+		backgroundColor: '#fffa',
 		borderRadius: 10,
 		border: '1px solid #000',
 		padding: GAP,
-		width: 250,
 	},
 	content: {
 		position: 'relative',
@@ -56,9 +57,12 @@ const styles: {[component: string]: CSSProperties} = {
 		gap: GAP,
 	},
 	category: {
+		transition: 'all 1s',
 		height: CATEGORY_HEIGHT,
-		width: CATEGORY_HEIGHT,
 		borderRadius: CATEGORY_HEIGHT / 2,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
 	},
 	title: {
 		fontSize: TITLE_FONT_SIZE,
@@ -97,13 +101,15 @@ export default class Ticket extends React.Component<Props, State> {
 		const { style: additionalStyle } = this.props;
 		const id = 'TUN-75';
 		const categories: Category[] = [
-			{ name: 'a', color: '#f00' },
+			{ name: 'feature', color: '#f00' },
 			{ name: 'b', color: '#0f0' },
 			{ name: 'c', color: '#00f' },
 		];
 		const title = 'Fix the bug where the audio playback suddently stops';
 		const urgency = 0.4; // between 0 and 1
 		const assignee: Assignee = { initials: 'RK', color: '#345' };
+
+		const { showsCategoryNames } = this.state;
 
 		const urgencyColor = `rgb(${255 * 2 * urgency}, ${255 * 2 * (1 - urgency)}, 0)`;
 
@@ -116,14 +122,27 @@ export default class Ticket extends React.Component<Props, State> {
 					<div className="ticket-top-section" style={styles.topSection}>
 						<div className="ticket-id" style={styles.id}>{id}</div>
 						<div className="ticket-categories" style={styles.categoriesContainer}>
+							{/* eslint-disable jsx-a11y/click-events-have-key-events */}
+							{/* eslint-disable jsx-a11y/no-static-element-interactions */}
 							{categories.map((category) => (
 								<div
 									key={category.name}
 									className="ticket-category"
-									style={{ ...styles.category, backgroundColor: category.color }}
-								/>
+									style={{
+										...styles.category,
+										backgroundColor: category.color,
+										width: showsCategoryNames ? undefined : CATEGORY_HEIGHT,
+										paddingLeft: showsCategoryNames ? CATEGORY_HEIGHT / 2 : undefined,
+										paddingRight: showsCategoryNames ? CATEGORY_HEIGHT / 2 : undefined,
+									}}
+									onClick={() => { this.setState((prev) => ({ showsCategoryNames: !prev.showsCategoryNames })); }}
+								>
+									{showsCategoryNames && category.name}
+								</div>
 							))}
 						</div>
+						{/* eslint-enable jsx-a11y/click-events-have-key-events */}
+						{/* eslint-enable jsx-a11y/no-static-element-interactions */}
 					</div>
 
 					<div className="ticket-title" style={styles.title}>
