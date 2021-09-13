@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
 import './App.css';
 import { TicketCardData } from './components/Ticket';
-import Pool from './components/Pool';
+import ProjectPage from './components/ProjectPage';
 
 const randomTicket = (): TicketCardData => ({
 	id: `TUN-${Math.round(Math.random() * 500)}`,
@@ -40,7 +40,13 @@ const styles: {[component: string]: CSSProperties} = {
 function App(): JSX.Element {
 	return (
 		<div className="App" style={styles.app}>
-			<Pool style={styles.segmentsContainer} initialSegments={segments} />
+			<ProjectPage project={{
+				id: 19,
+				name: 'another project',
+				owner_user_id: 10,
+			}}
+			/>
+			{/* <Pool style={styles.segmentsContainer} initialSegments={segments} /> */}
 		</div>
 	);
 }

@@ -111,6 +111,8 @@
         ],
         "object-curly-newline": "off",
         "no-plusplus": "off",
-        "no-continue": "off"
+        "no-continue": "off",
+        "import/prefer-default-export": "warn",
+        "react/destructuring-assignment": "off"
     }
 }
